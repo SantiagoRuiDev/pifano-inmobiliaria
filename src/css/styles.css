@@ -1,0 +1,9 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    font-family: "Poppins";
+}
+
+.navigation-card {
+    text-decoration: none !important;
+}
