@@ -4,7 +4,7 @@
         private $host = "localhost";
         private $dbname = "inmobiliaria";
         private $user = "root";
-        private $password = "";
+        private $password = "pass34!";
 
         public function conexion() {
             try {

@@ -5,11 +5,13 @@ session_start();
 // IMPORTAMOS CONTROLADORES
 include_once 'src/controllers/UserController.php';
 include_once 'src/controllers/RentController.php';
+include_once 'src/controllers/PropertyController.php';
 include_once 'src/views/ErrorView.php';
 
 // Instanciamos controlador de noticias
 $userController = new UserController();
 $rentController = new RentController();
+$propertyController = new PropertyController();
 $errorView = new ErrorView();
 
 
@@ -34,7 +36,21 @@ switch ($params[0]) {
         //if (isset($_SESSION['rol'])) header("Location: inicio"); // Esto previene que accedan a una sesion con una sesion ya iniciada.
         $rentController->renderManagmentPage();
         break;
-
+    case 'propiedades':
+        $propertyController->renderPropertyPage();
+        break;
+    case 'crear-propiedad':
+        $propertyController->handleCreateProperty();
+        break;
+    case 'editar-propiedad':
+         $propertyController->handleEditProperty($params[1]);
+        break;
+        case 'actualizar-propiedad':
+        $propertyController->updateProperty();
+        break;
+    case 'eliminar-propiedad':
+        $propertyController->deleteProperty($params[1]);
+        break;
     default:
         //Si no encuentra la URL o no tiene ruta y controlador definido muestra error.
         $errorView->loadNotFoundErrorPage("Esta pagina no existe", "danger");
