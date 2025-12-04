@@ -4,8 +4,8 @@
         private $host = "localhost";
         private $dbname = "inmobiliaria";
         private $user = "root";
-        private $password = "pass34!";
-
+        private $password = "";
+//pass34!
         public function conexion() {
             try {
                 // Intentamos la conexion a la db.

@@ -1,0 +1,59 @@
+<?php include_once 'src/templates/header.phtml'; ?>
+
+<main class="min-h-screen bg-indigo-100 w-full grid items-start gap-4 py-4">
+
+    <div class="w-full flex justify-between items-center px-8 mb-4">
+        <a href="/pifano-inmobiliaria" 
+           class="text-red-600 border-2 border-red-600 rounded-md px-4 py-2 no-underline hover:text-red-800">
+            Regresar al inicio
+        </a>
+
+        <a href="/pifano-inmobiliaria/crear-cliente" 
+           class="text-green-600 border-2 border-green-600 rounded-md px-4 py-2 no-underline hover:text-green-800">
+            Nuevo Cliente
+        </a>
+    </div>
+
+    <div class="container flex justify-center mx-auto mt-2">
+        <div class="flex flex-col w-full px-4">
+            <div class="border-b border-gray-200 shadow">
+                <table class="divide-y divide-gray-300 w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-2 text-xs text-gray-500">Nombre</th>
+                            <th class="px-4 py-2 text-xs text-gray-500">Apellido</th>
+                            <th class="px-4 py-2 text-xs text-gray-500">Email</th>
+                            <th class="px-4 py-2 text-xs text-gray-500">Teléfono</th>
+                            <th class="px-4 py-2 text-xs text-gray-500">DNI</th> 
+                            <th class="px-4 py-2 text-xs text-gray-500">Direccion</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-300">
+                        <?php foreach ($Clients as $client): ?>
+                            <tr class="whitespace-nowrap">
+                                <td class="px-4 py-3"><?= $client->name ?></td>
+                                <td class="px-4 py-3"><?= $client->lastname ?></td>
+                                <td class="px-4 py-3"><?= $client->email ?></td>
+                                <td class="px-4 py-3"><?= $client->phone ?></td>
+                                <td class="px-4 py-3"><?= $client->dni ?></td>
+                                <td class="px-4 py-3 flex gap-2">
+                                    <a href="/pifano-inmobiliaria/editar-cliente/<?= $client->id_client ?>" 
+                                       class="px-3 py-1 text-sm text-indigo-600 bg-indigo-200 rounded-full">
+                                       Editar
+                                    </a>
+                                    <a onclick="return confirm('¿Seguro que deseas eliminar este cliente?');"
+                                       href="/pifano-inmobiliaria/eliminar-cliente/<?= $client->id_client ?>"
+                                       class="px-3 py-1 text-sm text-red-400 bg-red-200 rounded-full">
+                                       Eliminar
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<?php include_once 'src/templates/footer.phtml'; ?>

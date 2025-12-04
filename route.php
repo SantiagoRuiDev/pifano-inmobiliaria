@@ -6,12 +6,14 @@ session_start();
 include_once 'src/controllers/UserController.php';
 include_once 'src/controllers/RentController.php';
 include_once 'src/controllers/PropertyController.php';
+include_once 'src/controllers/ClientControllers.php';
 include_once 'src/views/ErrorView.php';
 
 // Instanciamos controlador de noticias
 $userController = new UserController();
 $rentController = new RentController();
 $propertyController = new PropertyController();
+$clientController = new ClientControllers();
 $errorView = new ErrorView();
 
 
@@ -27,7 +29,7 @@ $params = explode('/', $action);
 
 // determina que camino seguir según la acción
 switch ($params[0]) {
-        // Aqui estan las rutas referidas a las sesiones  y registros.
+    // Aqui estan las rutas referidas a las sesiones  y registros.
     case 'inicio':
         //if (isset($_SESSION['rol'])) header("Location: inicio"); // Esto previene que accedan a una sesion con una sesion ya iniciada.
         $userController->renderIndexView();
@@ -43,13 +45,31 @@ switch ($params[0]) {
         $propertyController->handleCreateProperty();
         break;
     case 'editar-propiedad':
-         $propertyController->handleEditProperty($params[1]);
+        $propertyController->handleEditProperty($params[1]);
         break;
-        case 'actualizar-propiedad':
+    case 'actualizar-propiedad':
         $propertyController->updateProperty();
         break;
     case 'eliminar-propiedad':
         $propertyController->deleteProperty($params[1]);
+        break;
+    case 'clients':
+        $clientController->renderClientPage();
+        break;
+    case 'crear-cliente':
+        $clientController->renderFormCreateClient();
+        break;
+    case 'guardar-cliente': // Esta es la ruta para el POST
+        $clientController->createClient();
+        break;
+    case 'editar-cliente':
+        $clientController->handleEditClient($params[1]);
+        break;
+    case 'actualizar-cliente': // Ruta para el POST de edición
+        $clientController->updateClient($params[1]);
+        break;
+    case 'eliminar-cliente':
+        $clientController->deleteClient($params[1]);
         break;
     default:
         //Si no encuentra la URL o no tiene ruta y controlador definido muestra error.
