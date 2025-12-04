@@ -1,0 +1,69 @@
+<?php include_once 'src/templates/header.phtml'; ?>
+
+<main class="min-h-screen bg-indigo-100 w-full grid items-start py-8">
+    <div class="max-w-2xl mx-auto bg-white shadow-md rounded-lg p-8">
+
+        <h2 class="text-2xl font-semibold mb-6 text-indigo-700">Editar Cliente</h2>
+
+        <form action="/pifano-inmobiliaria/actualizar-cliente/<?= $client->id_client ?>" method="POST">
+            
+            <div class="mb-4">
+                <label class="text-gray-700 font-bold">Nombre</label>
+                <input type="text" name="name" required 
+                       value="<?= htmlspecialchars($client->name) ?>"
+                       class="w-full border border-gray-300 rounded-md px-4 py-2 mt-1" />
+            </div>
+
+            <div class="mb-4">
+                <label class="text-gray-700 font-bold">Apellido</label>
+                <input type="text" name="lastName" required 
+                       value="<?= htmlspecialchars($client->lastname) ?>"
+                       class="w-full border border-gray-300 rounded-md px-4 py-2 mt-1" />
+            </div>
+
+            <div class="mb-4">
+                <label class="text-gray-700 font-bold">DNI</label>
+                <input type="number" name="dni" required 
+                       value="<?= htmlspecialchars($client->dni) ?>"
+                       class="w-full border border-gray-300 rounded-md px-4 py-2 mt-1" />
+            </div>
+
+            <div class="mb-4">
+                <label class="text-gray-700 font-bold">Email</label>
+                <input type="email" name="email" required 
+                       value="<?= htmlspecialchars($client->email) ?>"
+                       class="w-full border border-gray-300 rounded-md px-4 py-2 mt-1" />
+            </div>
+
+            <div class="mb-4">
+                <label class="text-gray-700 font-bold">Teléfono</label>
+                <input type="text" name="phone" required 
+                       value="<?= htmlspecialchars($client->phone) ?>"
+                       class="w-full border border-gray-300 rounded-md px-4 py-2 mt-1" />
+            </div>
+
+            <div class="mb-4">
+                <label class="text-gray-700 font-bold">Dirección</label>
+                <input type="text" name="address" required 
+                       value="<?= htmlspecialchars($client->address) ?>"
+                       class="w-full border border-gray-300 rounded-md px-4 py-2 mt-1" />
+            </div>
+
+            <div class="flex justify-between mt-8">
+                <a href="clients" 
+                   class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">
+                   Cancelar
+                </a>
+
+                <button type="submit"
+                        class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors">
+                     Guardar Cambios
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</main>
+
+<?php include_once 'src/templates/footer.phtml'; ?>
