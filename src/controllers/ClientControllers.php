@@ -36,8 +36,7 @@ class ClientControllers
 
 // Añade esto a tu clase ClientControllers
 
-public function createClient() {
-    
+public function createClient() { 
     if ($_SERVER['REQUEST_METHOD'] === "POST" && !empty($_POST['name']) && !empty($_POST['lastName']) && !empty($_POST['email'])) {
         
        
@@ -53,7 +52,7 @@ public function createClient() {
 
         if ($id) {
             
-            header("Location: http://" . $_SERVER["SERVER_NAME"] . "/clients");
+            header("Location: /pifano-inmobiliaria/clients");
         } else {
         
             echo "Error al crear cliente";
@@ -70,14 +69,14 @@ public function createClient() {
             $address = $_POST['address'];
             $dni = $_POST['dni'];
             $this->model->UpdateClient($id, $name, $lastName, $email, $phone, $address, $dni);
-            header("Location: http://" . $_SERVER["SERVER_NAME"] . "/clients");
+            header("Location: /pifano-inmobiliaria/clients");
         }
     }
 
    
     public function deleteClient($id){
         $this->model->DeleteClientById($id);
-        header("Location: http://" . $_SERVER["SERVER_NAME"] . "/clients");
+        header("Location: /pifano-inmobiliaria/clients");
     }
 
     public function getClients(){

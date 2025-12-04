@@ -25,7 +25,8 @@
                             <th class="px-4 py-2 text-xs text-gray-500">Email</th>
                             <th class="px-4 py-2 text-xs text-gray-500">Teléfono</th>
                             <th class="px-4 py-2 text-xs text-gray-500">DNI</th> 
-                            <th class="px-4 py-2 text-xs text-gray-500">Direccion</th>
+                            <th class="px-4 py-2 text-xs text-gray-500">Direccion</th> 
+                            <th class="px-4 py-2 text-xs text-gray-500">Acciones</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-300">
@@ -36,6 +37,7 @@
                                 <td class="px-4 py-3"><?= $client->email ?></td>
                                 <td class="px-4 py-3"><?= $client->phone ?></td>
                                 <td class="px-4 py-3"><?= $client->dni ?></td>
+                                <td class="px-4 py-3"><?= $client->address ?></td>
                                 <td class="px-4 py-3 flex gap-2">
                                     <a href="/pifano-inmobiliaria/editar-cliente/<?= $client->id_client ?>" 
                                        class="px-3 py-1 text-sm text-indigo-600 bg-indigo-200 rounded-full">

@@ -59,7 +59,7 @@ switch ($params[0]) {
     case 'crear-cliente':
         $clientController->renderFormCreateClient();
         break;
-    case 'guardar-cliente': // Esta es la ruta para el POST
+    case 'guardar-cliente':
         $clientController->createClient();
         break;
     case 'editar-cliente':
