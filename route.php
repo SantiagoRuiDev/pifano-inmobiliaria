@@ -4,10 +4,12 @@ session_start();
 
 // IMPORTAMOS CONTROLADORES
 include_once 'src/controllers/UserController.php';
+include_once 'src/controllers/RentController.php';
 include_once 'src/views/ErrorView.php';
 
 // Instanciamos controlador de noticias
 $userController = new UserController();
+$rentController = new RentController();
 $errorView = new ErrorView();
 
 
@@ -27,6 +29,10 @@ switch ($params[0]) {
     case 'inicio':
         //if (isset($_SESSION['rol'])) header("Location: inicio"); // Esto previene que accedan a una sesion con una sesion ya iniciada.
         $userController->renderIndexView();
+        break;
+    case 'alquileres':
+        //if (isset($_SESSION['rol'])) header("Location: inicio"); // Esto previene que accedan a una sesion con una sesion ya iniciada.
+        $rentController->renderManagmentPage();
         break;
 
     default:
