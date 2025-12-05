@@ -39,29 +39,27 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-300">
-                            <tr class="whitespace-nowrap">
-                                <td class="px-6 py-4 text-sm text-gray-500">
-                                    1
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="text-sm text-gray-900">
-                                        Jon doe
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="text-sm text-gray-500">Av 25 de Mayo 1039</div>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-500">
-                                    2021-1-12
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-500">
-                                    $200.000
-                                </td>
-                                <td class="px-6 py-4">
-                                    <a href="/pifano-inmobiliaria/alquileres/editar/{id}" class="px-4 py-1 text-sm text-indigo-600 bg-indigo-200 rounded-full">Editar</a>
-                                    <a href="/pifano-inmobiliaria/alquileres/eliminar/{id}" class="px-4 py-1 text-sm text-red-400 bg-red-200 rounded-full">Eliminar</a>
-                                </td>
-                            </tr>
+                            <?php foreach ($rents as $r): ?>
+                                <tr class="whitespace-nowrap">
+                                    <td class="px-4 py-3"><?= $r->id_rent ?></td>
+                                    <td class="px-4 py-3"><?= $r->name ?> <?= $r->lastname ?></td>
+                                    <td class="px-4 py-3"><?= $r->address ?></td>
+                                    <td class="px-4 py-3"><?= $r->start_contract ?></td>
+                                    <td class="px-4 py-3"><?= $r->amount ?></td>
+
+                                    <td class="px-4 py-3">
+                                        <a href="/pifano-inmobiliaria/editar-alquiler/<?= $r->id_rent ?>"
+                                            class="px-3 py-1 text-sm text-indigo-600 bg-indigo-200 rounded-full">
+                                            Editar
+                                        </a>
+                                        <a onclick="return confirm('¿Seguro que deseas eliminar este alquiler?');"
+                                            href="?action=eliminar-alquiler/<?= $r->id_rent ?>"
+                                            class="px-3 py-1 text-sm text-red-400 bg-red-200 rounded-full">
+                                            Eliminar
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>

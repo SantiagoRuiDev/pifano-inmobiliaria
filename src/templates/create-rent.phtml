@@ -1,0 +1,90 @@
+<?php include_once 'src/templates/header.phtml'; ?>
+
+<main class="min-h-screen bg-indigo-100 w-full grid items-start py-8">
+    <div class="max-w-2xl mx-auto bg-white shadow-md rounded-lg p-8">
+        <h2 class="text-2xl font-semibold mb-6 text-indigo-700">Crear alquiler</h2>
+
+        <form action="<?= BASE_URL ?>crear-alquiler" method="POST">
+            <div class="mb-4">
+                <label class="text-gray-700">Inquilino</label>
+                <select name="id_tenant" id="id_tenant" class="w-full border border-gray-300 rounded-md px-4 py-2">
+                        <option selected disabled>Seleccionar cliente</option>
+                        <?php foreach ($clients as $c): ?>
+                            <option value="<?= $c->id_client?>"><?= $c->name?> <?= $c->lastname?></option>
+                        <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="text-gray-700">Locatario</label>
+                <select name="id_locator" id="id_locator" class="w-full border border-gray-300 rounded-md px-4 py-2">
+                    <option selected disabled>Seleccionar cliente</option>
+                        <?php foreach ($clients as $c): ?>
+                            <option value="<?= $c->id_client?>"><?= $c->name?> <?= $c->lastname?></option>
+                        <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="text-gray-700">Garantía</label>
+                <select name="id_guarantor" id="id_guarantor" class="w-full border border-gray-300 rounded-md px-4 py-2">
+                    <option selected disabled>Seleccionar cliente</option>
+                        <?php foreach ($clients as $c): ?>
+                            <option value="<?= $c->id_client?>"><?= $c->name?> <?= $c->lastname?></option>
+                        <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="text-gray-700">Propiedad</label>
+                <select name="id_property" id="id_property" class="w-full border border-gray-300 rounded-md px-4 py-2">
+                    <option selected disabled>Seleccionar inmueble</option>
+                        <?php foreach ($properties as $p): ?>
+                            <option value="<?= $p->id_property?>"><?= $p->address?> en <?= $p->city?></option>
+                        <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="text-gray-700">Monto</label>
+                <input type="number" name="amount" required class="w-full border border-gray-300 rounded-md px-4 py-2" />
+            </div>
+            <div class="mb-4">
+                <label class="text-gray-700">Honorarios</label>
+                <input type="number" name="honorarium" required class="w-full border border-gray-300 rounded-md px-4 py-2" />
+            </div>
+            <div class="mb-4">
+                <label class="text-gray-700">Descuento</label>
+                <input type="number" name="discount" class="w-full border border-gray-300 rounded-md px-4 py-2" />
+            </div>
+            <div class="mb-4">
+                <label class="text-gray-700">Fecha de generación</label>
+                <input type="date" name="generation_date" required class="w-full border border-gray-300 rounded-md px-4 py-2" />
+            </div>
+            <div class="mb-4">
+                <label class="text-gray-700">Método de pago</label>
+                <input type="text" name="payment_method" required class="w-full border border-gray-300 rounded-md px-4 py-2" />
+            </div>
+            <div class="mb-4">
+                <label class="text-gray-700">Tipo de ajuste</label>
+                <input type="text" name="adjustment_type" required class="w-full border border-gray-300 rounded-md px-4 py-2" />
+            </div>
+            <div class="mb-4">
+                <label class="text-gray-700">Fecha de ajuste</label>
+                <input type="date" name="adjustment_time" required class="w-full border border-gray-300 rounded-md px-4 py-2" />
+            </div>
+            <div class="mb-4">
+                <label class="text-gray-700">Inicio del contrato</label>
+                <input type="date" name="start_contract" required class="w-full border border-gray-300 rounded-md px-4 py-2" />
+            </div>
+            <div class="mb-4">
+                <label class="text-gray-700">Fin del contrato</label>
+                <input type="date" name="end_contract" required class="w-full border border-gray-300 rounded-md px-4 py-2" />
+            </div>
+
+            <button class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md mt-4">
+                Guardar alquiler
+            </button>
+
+        </form>
+
+    </div>
+</main>
+
+<?php include_once 'src/templates/footer.phtml'; ?>

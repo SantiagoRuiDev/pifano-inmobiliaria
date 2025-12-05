@@ -18,6 +18,11 @@ switch ($params[0]) {
         $ctrl = controller('src/controllers/RentController.php', 'RentController');
         $ctrl->renderManagmentPage();
         break;
+    case 'crear-alquiler':
+        $ctrl = controller('src/controllers/RentController.php', 'RentController');
+        $ctrl->handleCreateRent();
+        break;
+
     case 'propiedades':
         $ctrl = controller('src/controllers/PropertyController.php', 'PropertyController');
         $ctrl->renderPropertyPage();
