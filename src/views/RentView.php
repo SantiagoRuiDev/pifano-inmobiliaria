@@ -9,4 +9,8 @@ class RentView {
     public function renderFormRent($clients, $properties){
         include_once 'src/templates/create-rent.phtml';
     }
+
+    public function renderRentEditForm($rent, $clients, $properties){
+        include 'src/templates/edit-rent.phtml';
+    }
 }

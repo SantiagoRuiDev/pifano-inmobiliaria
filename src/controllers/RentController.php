@@ -22,6 +22,20 @@ class RentController
         $this->view->loadManagmentPage($rents);
     }
 
+    private function renderRentEditForm($rent)
+    {
+        include_once 'src/models/ClientModels.php';
+        include_once 'src/models/PropertyModel.php';
+
+        $clientModel = new ClientModels();
+        $propertyModel = new PropertyModel();
+
+        $clients = $clientModel->GetClients();
+        $properties = $propertyModel->getAllProperties();
+
+        $this->view->renderRentEditForm($rent, $clients, $properties);
+    }
+
     private function renderFormRent()
     {
         include_once 'src/models/ClientModels.php';
@@ -34,6 +48,17 @@ class RentController
         $properties = $propertyModel->getAllProperties();
 
         $this->view->renderFormRent($clients, $properties);
+    }
+    
+    public function handleEditRent($id_rent)
+    {
+        $rent = $this->model->getRentById($id_rent);
+
+        if ($rent) {
+            $this->renderRentEditForm($rent);
+        } else {
+            echo "Alquiler no encontrado";
+        }
     }
 
     public function handleCreateRent()
@@ -64,5 +89,37 @@ class RentController
         } else {
             $this->renderFormRent();
         }
+    }
+
+    public function updateRent()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id_rent = $_POST['id_rent'] ?? '';
+            $id_tenant = $_POST['id_tenant'] ?? '';
+            $id_locator = $_POST['id_locator'] ?? '';
+            $id_guarantor = $_POST['id_guarantor'] ?? '';
+            $id_property = $_POST['id_property'] ?? '';
+            $amount = $_POST['amount'] ?? '';
+            $honorarium = $_POST['honorarium'] ?? '';
+            $discount = $_POST['discount'] ?? '';
+            $generation_date = $_POST['generation_date'] ?? '';
+            $payment_method = $_POST['payment_method'] ?? '';
+            $adjustment_type = $_POST['adjustment_type'] ?? '';
+            $adjustment_time = $_POST['adjustment_time'] ?? '';
+            $start_contract = $_POST['start_contract'] ?? '';
+            $end_contract = $_POST['end_contract'] ?? '';
+
+            $this->model->updateRent($id_rent, $id_tenant, $id_locator, $id_guarantor, $id_property, $amount, $honorarium, $discount, $generation_date, $payment_method, $adjustment_type, $adjustment_time, $start_contract, $end_contract);
+            header("Location: alquileres");
+            exit();
+        }
+    }
+
+    
+    public function deleteRent($id_rent)
+    {
+        $this->model->deleteRentById($id_rent);
+        header("Location: alquileres");
+        exit();
     }
 }

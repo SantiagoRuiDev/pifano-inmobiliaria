@@ -28,10 +28,8 @@
                             <th class="px-4 py-2 text-xs text-gray-500">Dirección</th>
                             <th class="px-4 py-2 text-xs text-gray-500">Piso</th>
                             <th class="px-4 py-2 text-xs text-gray-500">Departamento</th>
-                            <th class="px-4 py-2 text-xs text-gray-500">Descripción</th>
                             <th class="px-4 py-2 text-xs text-gray-500">Tipo</th>
                             <th class="px-4 py-2 text-xs text-gray-500">Precio Base</th>
-                            <th class="px-4 py-2 text-xs text-gray-500">Acciones</th>
                             <th class="px-4 py-2 text-xs text-gray-500">Acciones</th>
                         </tr>
                     </thead>
@@ -44,7 +42,6 @@
                                 <td class="px-4 py-3"><?= $p->address ?></td>
                                 <td class="px-4 py-3"><?= $p->floor ?></td>
                                 <td class="px-4 py-3"><?= $p->apartment ?></td>
-                                <td class="px-4 py-3"><?= $p->description ?></td>
                                 <td class="px-4 py-3"><?= $p->type ?></td>
                                 <td class="px-4 py-3"><?= $p->base_price ?></td>
 
@@ -53,9 +50,6 @@
                                     class="px-3 py-1 text-sm text-indigo-600 bg-indigo-200 rounded-full">
                                             Editar
                                      </a>
-                                </td>
-
-                                <td class="px-4 py-3">
                                     <a onclick="return confirm('¿Seguro que deseas eliminar esta propiedad?');"
                                         href="?action=eliminar-propiedad/<?= $p->id_property ?>"
                                         class="px-3 py-1 text-sm text-red-400 bg-red-200 rounded-full">

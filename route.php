@@ -22,6 +22,19 @@ switch ($params[0]) {
         $ctrl = controller('src/controllers/RentController.php', 'RentController');
         $ctrl->handleCreateRent();
         break;
+    case 'editar-alquiler':
+        $ctrl = controller('src/controllers/RentController.php', 'RentController');
+        $ctrl->handleEditRent($params[1] ?? null);
+        break;
+    case 'actualizar-alquiler':
+        $ctrl = controller('src/controllers/RentController.php', 'RentController');
+        $ctrl->updateRent();
+        break;
+        
+    case 'eliminar-alquiler':
+        $ctrl = controller('src/controllers/RentController.php', 'RentController');
+        $ctrl->deleteRent($params[1] ?? null);
+        break;
 
     case 'propiedades':
         $ctrl = controller('src/controllers/PropertyController.php', 'PropertyController');
