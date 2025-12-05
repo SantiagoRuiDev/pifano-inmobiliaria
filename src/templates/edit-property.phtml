@@ -5,7 +5,7 @@
 
         <h2 class="text-2xl font-semibold mb-6 text-indigo-700">Editar propiedad</h2>
 
-        <form action="/pifano-inmobiliaria/actualizar-propiedad" method="POST">
+        <form action="<?= BASE_URL ?>actualizar-propiedad" method="POST">
             <input type="hidden" name="id" value="<?= $property->id_property ?>">
 
             <div>
