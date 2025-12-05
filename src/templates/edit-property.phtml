@@ -1,0 +1,91 @@
+<?php include_once 'src/templates/header.phtml'; ?>
+
+<main class="min-h-screen bg-indigo-100 w-full grid items-start py-8">
+    <div class="max-w-2xl mx-auto bg-white shadow-md rounded-lg p-8">
+
+        <h2 class="text-2xl font-semibold mb-6 text-indigo-700">Editar propiedad</h2>
+
+        <form action="/pifano-inmobiliaria/actualizar-propiedad" method="POST">
+            <input type="hidden" name="id" value="<?= $property->id_property ?>">
+
+            <div>
+                <label class="text-gray-700">Ciudad</label>
+                <input type="text" name="city" required 
+                    placeholder="Ingrese un texto"
+                    value="<?= htmlspecialchars($property->city) ?>"
+                    class="w-full border border-gray-300 rounded-md px-4 py-2" />
+            </div>
+
+            <div>
+                <label class="text-gray-700">País</label>
+                <input type="text" name="country" required 
+                    placeholder="Ingrese un texto"
+                    value="<?= htmlspecialchars($property->country) ?>"
+                    class="w-full border border-gray-300 rounded-md px-4 py-2" />
+            </div>
+
+            <div>
+                <label class="text-gray-700">Dirección</label>
+                <input type="text" name="address" required 
+                    placeholder="Ingrese un texto"
+                    value="<?= htmlspecialchars($property->address) ?>"
+                    class="w-full border border-gray-300 rounded-md px-4 py-2" />
+            </div>
+
+            <div>
+                <label class="text-gray-700">Piso</label>
+                <input type="number" name="floor" 
+                    placeholder="Ingrese un número"
+                    value="<?= htmlspecialchars($property->floor) ?>"
+                    class="w-full border border-gray-300 rounded-md px-4 py-2" />
+            </div>
+
+            <div>
+                <label class="text-gray-700">Departamento (opcional)</label>
+                <input type="text" name="apartment" 
+                    placeholder="Ingrese un texto"
+                    value="<?= htmlspecialchars($property->apartment) ?>"
+                    class="w-full border border-gray-300 rounded-md px-4 py-2" />
+            </div>
+
+            <div>
+                <label class="text-gray-700">Descripción</label>
+                <textarea name="description" rows="3"
+                    placeholder="Ingrese un número"
+                    class="w-full border border-gray-300 rounded-md px-4 py-2"><?= htmlspecialchars($property->description) ?></textarea>
+            </div>
+
+            <div>
+                <label class="text-gray-700">Tipo</label>
+                <input type="text" name="type" required
+                    placeholder="Ingrese un texto"
+                    value="<?= htmlspecialchars($property->type) ?>"
+                    class="w-full border border-gray-300 rounded-md px-4 py-2" />
+            </div>
+
+            <div>
+                <label class="text-gray-700">Precio Base</label>
+                <input type="number" name="base_price" required 
+                    placeholder="Ingrese un texto"
+                    value="<?= htmlspecialchars($property->base_price) ?>"
+                    class="w-full border border-gray-300 rounded-md px-4 py-2" />
+            </div>
+
+            <div class="flex justify-between mt-6">
+                <a href="../propiedades" 
+                   class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
+                   Cancelar
+                </a>
+
+                <button type="submit"
+                        class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+                    Guardar cambios
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</main>
+
+<?php include_once 'src/templates/footer.phtml'; ?>
