@@ -49,10 +49,10 @@ class RentController
 
         $this->view->renderFormRent($clients, $properties);
     }
-    
+
     public function handleEditRent($id_rent)
     {
-        $rent = $this->model->getRentById($id_rent);
+        $rent = $this->model->getRentDataById($id_rent);
 
         if ($rent) {
             $this->renderRentEditForm($rent);
@@ -115,11 +115,68 @@ class RentController
         }
     }
 
-    
+
     public function deleteRent($id_rent)
     {
         $this->model->deleteRentById($id_rent);
         header("Location: alquileres");
         exit();
+    }
+
+    public function generateReceiptPdf()
+    {
+
+        $id_rent = $_POST['id_rent'] ?? null;
+
+        if (!$id_rent) {
+            $this->alert->loadNotFoundErrorPage();
+            return;
+        }
+
+        $rentData = $this->model->getRentDataById($id_rent);
+
+        if (!$rentData) {
+            $this->alert->loadNotFoundErrorPage();
+            return;
+        }
+
+        require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
+
+        $options = new \Dompdf\Options();
+        $options->set('defaultFont', 'Helvetica');
+
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('default_charset', 'UTF-8');
+
+        $dompdf = new \Dompdf\Dompdf($options);
+
+
+        $html = $this->renderHtmlForReceipt($rentData);
+
+
+        $dompdf->loadHtml($html);
+
+        $dompdf->setPaper('A4', 'portrait');
+
+        $dompdf->render();
+
+
+        $filename = 'Recibo_Alquiler_' . $id_rent . '.pdf';
+
+        $dompdf->stream($filename, array("Attachment" => false));
+        exit();
+    }
+
+    private function renderHtmlForReceipt($rentData)
+    {
+        ob_start();
+        include __DIR__ . '/../templates/receipt_template.phtml';
+        $html = ob_get_clean();
+        return $html;
+    }
+
+    public function renderSelectRentPage(){
+        $rents = $this->model->getAllRents();
+        $this->view->loadSelectRentPage($rents);
     }
 }

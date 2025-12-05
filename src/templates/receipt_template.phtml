@@ -1,0 +1,240 @@
+<?php
+    
+    // Seguridad: Aseguramos que $rentData no es null 
+    if (!isset($rentData) || !$rentData) {
+        echo "<h1>Error: Datos de alquiler no encontrados.</h1>";
+        return; 
+    }
+
+    // --- LÓGICA: Obtener Mes y Año de la DB a partir de generation_date ---
+    $generation_date_str = $rentData->generation_date ?? date('Y-m-d'); // Fallback a fecha actual si es nulo
+    
+    $mes_recibo = 'ERROR_MES';
+    $anio_recibo = date('Y');
+
+    try {
+        // 1. Crear un objeto DateTime a partir de la fecha de la DB
+        $date_obj = new DateTime($generation_date_str);
+        
+        // 2. Configurar la localización a español para obtener el nombre del mes
+        // Nota: Asegúrate de que tu sistema operativo tenga el soporte de idioma 'es_ES' instalado.
+        setlocale(LC_TIME, 'es_ES.utf8', 'es_ES', 'es');
+        
+        // 3. Formatear el mes a nombre completo en español y en mayúsculas
+        $mes_recibo = mb_strtoupper(strftime('%B', $date_obj->getTimestamp())); 
+        
+        // 4. Obtener el año
+        $anio_recibo = $date_obj->format('Y');
+        
+    } catch (Exception $e) {
+        // Si hay un error al parsear la fecha, usamos valores de fallback
+        $mes_recibo = 'INVALIDA';
+        $anio_recibo = date('Y');
+    }
+    // --- FIN LÓGICA DE FECHA ---
+
+    // Seguridad: Aseguramos que las propiedades existan y sean números antes de usarlas.
+    $monto_alquiler = (float) ($rentData->amount ?? 0);
+    $honorarium_percent = (float) ($rentData->honorarium ?? 0);
+    $descuento_otros = (float) ($rentData->discount ?? 0);
+    
+    // Calculamos el descuento de honorarios
+    $honorarium_discount = $monto_alquiler * ($honorarium_percent / 100); 
+    
+    // Calculamos el total
+    $total_a_pagar = $monto_alquiler - $honorarium_discount - $descuento_otros; 
+    
+    // Datos del inquilino y propiedad
+    $tenant_full_name = htmlspecialchars($rentData->tenant_name ?? '') . ' ' . htmlspecialchars($rentData->tenant_lastname ?? '');
+    $tenant_dni = htmlspecialchars($rentData->tenant_dni ?? '');
+    $property_location = htmlspecialchars($rentData->property_address ?? '') . ', ' . htmlspecialchars($rentData->property_city ?? '');
+
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"> 
+    <style>
+        /* Definición de la Fuente y Colores */
+        body { font-family: 'Helvetica', sans-serif; margin: 0; padding: 0; }
+        .color-primary { color: #144654; } 
+
+        /* Contenedor Principal */
+        .receipt-container { 
+            width: 190mm; 
+            margin: 10mm auto; 
+            padding: 10px; 
+            border: 3px solid #144654; 
+        }
+        
+        /* Helpers para alineación (DomPDF friendly: usando floats) */
+        .clearfix::after { content: ""; display: table; clear: both; }
+        
+        /* Cabecera */
+        .header { border-bottom: 2px solid #144654; padding-bottom: 15px; margin-bottom: 20px; overflow: hidden; }
+        .header-left { width: 60%; float: left; }
+        .header-right { width: 40%; float: right; text-align: right; font-size: 10pt; }
+        
+        /* Info de Empresa */
+        .logo-text { color: #144654; font-size: 18pt; font-weight: bold; margin: 0; }
+        .logo-subtext { color: #144654; font-size: 10pt; margin: 0; }
+        .info { font-size: 9pt; margin-top: 5px; color: #555; }
+        .receipt-number { font-size: 14pt; font-weight: bold; color: #144654; margin-bottom: 5px; }
+        
+        .date-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-bottom: 15px;
+            font-size: 9pt;
+            color: #144654;
+        }
+        .date-table th, .date-table td {
+            border: 1px solid #144654;
+            padding: 2px 0;
+            text-align: center;
+        }
+        .date-table td {
+            height: 15px; /* Altura de la caja de escritura */
+        }
+        
+        /* Líneas de Relleno del Cuerpo */
+        .field-line { border-bottom: 1px dashed #000; display: inline-block; min-width: 50%; height: 1.2em; vertical-align: bottom; }
+        .small-field-line { border-bottom: 1px dashed #000; display: inline-block; min-width: 25%; height: 1.2em; vertical-align: bottom; }
+
+        /* Detalles */
+        .section-title { font-weight: bold; margin-top: 20px; margin-bottom: 10px; border-bottom: 1px solid #144654; padding-bottom: 5px; color: #144654; }
+        
+        /* Filas de Detalle */
+        .detail-row { overflow: hidden; margin-bottom: 8px; font-size: 10pt; }
+        .detail-label-part { width: 70%; float: left; }
+        .detail-amount-part { width: 25%; float: right; text-align: right; }
+        .detail-dots { color: #999; } 
+        
+        /* Total Box */
+        .total-box-container { margin-top: 20px; overflow: hidden; }
+        .total-box { 
+            border: 3px solid #144654; 
+            padding: 5px 10px; 
+            float: right;
+            width: 40%;
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            height: 25px; 
+        }
+        .total-box-label { 
+            font-size: 10pt; 
+            font-weight: bold; 
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+        .total-amount-line {
+            border-bottom: 1px dashed #000;
+            display: inline-block;
+            min-width: 60%;
+            text-align: right;
+            font-size: 14pt;
+        }
+        .method-box { width: 50%; float: left; font-size: 10pt; }
+        
+        /* Firma */
+        .signature-line { margin-top: 50px; border-top: 1px solid #000; text-align: center; width: 30%; margin-left: 0; padding-top: 5px; font-size: 10pt; }
+    </style>
+</head>
+<body>
+    <div class="receipt-container">
+        
+        <div class="header clearfix">
+            <div class="header-left">
+                <p style="font-size: 24pt; font-weight: 900; color: #144654; margin-bottom: 5px;">AP</p>
+                <p class="logo-text">AGUSTIN PIFANO</p>
+                <p class="logo-subtext">MARTILLERO Y CORREDOR PÚBLICO</p>
+                <p class="logo-subtext">MATRÍCULA 1840 TOMO VII FOLIO 131</p>
+                <div class="info">
+                    Av. Roque Sáenz Peña 71° // Benito Juárez, Bs. As.
+                    <br>
+                    2281-461194 // pifanoagustin19@gmail.com
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="receipt-number">RECIBO N°....</div>
+                
+                <table class="date-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 33.3%;">DÍA</th>
+                            <th style="width: 33.3%;">MES</th>
+                            <th style="width: 33.3%;">AÑO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="info" style="margin-top: 20px;">
+                    C.U.I.T. / Ing. Brutos: 20-62779909-4
+                    <br>
+                    Inicio de act: 01/11/2022
+                </div>
+            </div>
+        </div>
+        
+        <p style="margin-bottom: 10px; font-size: 10pt;">
+            Recibí de los Sr/es. 
+            <span class="field-line" style="min-width: 50%;"><?= $tenant_full_name ?></span>, D. N. I. 
+            <span class="small-field-line" style="min-width: 15%;"><?= $tenant_dni ?></span>
+        </p>
+
+        <p style="margin-bottom: 10px; font-size: 10pt;">
+            la cantidad de pesos
+            <span class="field-line" style="min-width: 70%;"><?= number_format($monto_alquiler, 2) ?></span> $
+            <span class="small-field-line" style="min-width: 15%; border-bottom: none;"></span> 
+        </p>
+
+        <p style="margin-bottom: 10px; font-size: 10pt;">
+            en concepto de pago de alquiler, por el/la 
+            <span class="small-field-line" style="min-width: 25%;">PROPIEDAD</span> ubicado/a en
+        </p>
+        <p style="font-size: 10pt;">
+            <span class="field-line" style="min-width: 50%;"><?= $property_location ?></span>, MES/PERÍODO
+            <span class="small-field-line" style="min-width: 20%;"><?= $mes_recibo . '/' . $anio_recibo ?></span>
+        </p>
+
+        <div class="section-title">DETALLE:</div>
+        
+        <div class="detail-row">
+            <span class="detail-label-part">MES DE ALQUILER<span class="detail-dots">....................................</span></span>
+            <span class="detail-amount-part">$ <span class="field-line" style="min-width: 80%; border-bottom-style: dashed;"><?= number_format($monto_alquiler, 2) ?></span></span>
+        </div>
+        
+        <div class="detail-row">
+            <span class="detail-label-part">DESCUENTO HONORARIOS (<?= $honorarium_percent ?>%)<span class="detail-dots">...................</span></span>
+            <span class="detail-amount-part">$ <span class="field-line" style="min-width: 80%; border-bottom-style: dashed;"><?= number_format($honorarium_discount, 2) ?></span></span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-label-part">OTROS DESCUENTOS<span class="detail-dots">................................</span></span>
+            <span class="detail-amount-part">$ <span class="field-line" style="min-width: 80%; border-bottom-style: dashed;"><?= number_format($descuento_otros, 2) ?></span></span>
+        </div>
+
+        <div class="total-box-container clearfix">
+            <div class="method-box">
+                <div style="font-size: 10pt; font-weight: bold; margin-top: 10px;">MÉTODO DE PAGO</div>
+                <div class="field-line" style="min-width: 100%; margin-top: 5px;"></div>
+            </div>
+            
+            <div class="total-box">
+                <strong class="total-box-label">TOTAL: $</strong>
+                <span class="total-amount-line"><strong><?= number_format($total_a_pagar, 2) ?></strong></span>
+            </div>
+        </div>
+
+        <p class="signature-line">FIRMA LOCATARIO</p>
+
+    </div>
+</body>
+</html>

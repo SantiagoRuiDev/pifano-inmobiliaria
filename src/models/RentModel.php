@@ -11,17 +11,47 @@ class RentModel
         $this->PDO = $conex->conexion();
     }
 
-    public function getAllRents()
-    {
-        $query = $this->PDO->prepare("SELECT r.*, c.name, c.lastname, p.address FROM Rent r INNER JOIN Client c ON c.id_client = r.id_tenant INNER JOIN Property p ON p.id_property = r.id_property");
-        $query->execute();
-        $properties = $query->fetchAll(PDO::FETCH_OBJ);
-        return $properties;
-    }
 
-    public function getRentById($id_rent)
-    {
-        $query = $this->PDO->prepare('SELECT * FROM Rent WHERE id_rent = ?');
+    public function getAllRents(){
+        // Obtiene todos los alquileres, que podrías necesitar para un <select> más avanzado.
+        $query = $this->PDO->prepare("
+            SELECT 
+                r.*, 
+                p.address AS property_address,
+                p.city AS property_city,
+                l.name AS locator_name,
+                l.lastname AS locator_lastname,
+                t.name AS tenant_name,
+                t.lastname AS tenant_lastname,
+                t.dni AS tenant_dni
+            FROM Rent r
+            JOIN Property p ON r.id_property = p.id_property
+            JOIN Client l ON r.id_locator = l.id_client
+            JOIN Client t ON r.id_tenant = t.id_client
+        ");
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_OBJ);
+    }
+    
+    public function getRentDataById($id_rent){
+        // Obtiene todos los datos necesarios para el recibo a partir de múltiples tablas
+        $query = $this->PDO->prepare("
+            SELECT 
+                r.*, 
+                p.address AS property_address,
+                p.city AS property_city,
+                l.name AS locator_name,
+                l.lastname AS locator_lastname,
+                t.name AS tenant_name,
+                t.lastname AS tenant_lastname,
+                t.dni AS tenant_dni,
+                t.address AS tenant_address 
+            FROM Rent r
+            JOIN Property p ON r.id_property = p.id_property
+            JOIN Client l ON r.id_locator = l.id_client
+            JOIN Client t ON r.id_tenant = t.id_client
+            WHERE r.id_rent = ?
+        ");
         $query->execute([$id_rent]);
         return $query->fetch(PDO::FETCH_OBJ);
     }

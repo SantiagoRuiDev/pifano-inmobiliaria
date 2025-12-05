@@ -1,0 +1,33 @@
+<div id="receiptModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
+        <h3 class="text-xl font-semibold mb-4 text-indigo-700">Seleccionar Alquiler y Período</h3>
+        <form id="generateReceiptForm" method="POST" action="/api/generate-receipt">
+            
+            <div class="mb-4">
+                <label for="id_rent" class="block text-sm font-medium text-gray-700">Seleccionar Alquiler:</label>
+                <select id="id_rent" name="id_rent" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
+                    <option value="">Cargando alquileres...</option>
+                    </select>
+            </div>
+
+            <div class="mb-4">
+                <label for="period_date" class="block text-sm font-medium text-gray-700">Mes/Año a Pagar:</label>
+                <input type="month" id="period_date" name="period_date" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
+            </div>
+
+            <div class="mb-6">
+                <label for="payment_date" class="block text-sm font-medium text-gray-700">Fecha de Emisión del Recibo:</label>
+                <input type="date" id="payment_date" name="payment_date" value="<?php echo date('Y-m-d'); ?>" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
+            </div>
+
+            <div class="flex justify-end space-x-4">
+                <button type="button" id="closeModalBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
+                    Cancelar
+                </button>
+                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                    Generar Recibo
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

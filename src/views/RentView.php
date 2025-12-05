@@ -13,4 +13,9 @@ class RentView {
     public function renderRentEditForm($rent, $clients, $properties){
         include 'src/templates/edit-rent.phtml';
     }
+    
+    // Modificado para recibir y usar $rents
+    public function loadSelectRentPage($rents = []){ 
+        include_once 'src/templates/select-rent.phtml';
+    }
 }

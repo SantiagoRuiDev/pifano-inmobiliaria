@@ -90,6 +90,15 @@ switch ($params[0]) {
         $ctrl = controller('src/controllers/ClientControllers.php', 'ClientControllers');
         $ctrl->deleteClient($params[1] ?? null);
         break;
+        
+    case 'generar-recibo':
+        $ctrl = controller('src/controllers/RentController.php', 'RentController');
+        $ctrl->renderSelectRentPage();
+        break;
+    case 'procesar-recibo': 
+        $ctrl = controller('src/controllers/RentController.php', 'RentController');
+        $ctrl->generateReceiptPdf(); 
+        break;
 
     // Si no encuentra la ruta, redirige al 404
     default:
