@@ -10,7 +10,12 @@ class PropertyModel {
     }
 
     public function getAllProperties(){
-        $query = $this->PDO->prepare("SELECT * FROM Property");
+        $query = $this->PDO->prepare("SELECT 
+            p.*, 
+            tp.id_technical_properties
+        FROM Property p
+        LEFT JOIN technical_properties tp
+            ON p.id_technical_properties = tp.id_technical_properties");
         $query->execute();
         $properties = $query->fetchAll(PDO::FETCH_OBJ);
         return $properties;
@@ -23,9 +28,8 @@ class PropertyModel {
         return $query->fetch(PDO::FETCH_OBJ);
     }
 
-   public function addProperty($city, $country, $address, $floor, $apartment, $description, $type, $base_price){
+   public function addProperty($city, $country, $address, $floor, $apartment, $description, $type, $base_price, $id_technical_properties){
     try {
-        $id_technical_properties = NULL;
         $query = $this->PDO->prepare("
         INSERT INTO Property (city, country, address, floor, apartment, description, type, base_price, id_technical_properties) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");

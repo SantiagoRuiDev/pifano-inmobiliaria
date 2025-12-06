@@ -43,7 +43,7 @@ switch ($params[0]) {
 
     case 'crear-propiedad':
         $ctrl = controller('src/controllers/PropertyController.php', 'PropertyController');
-        $ctrl->handleCreateProperty();
+        $ctrl->handleCreateFullProperty();
         break;
 
     case 'editar-propiedad':
@@ -99,7 +99,10 @@ switch ($params[0]) {
         $ctrl = controller('src/controllers/RentController.php', 'RentController');
         $ctrl->generateReceiptPdf(); 
         break;
-
+    case 'datos-tecnicos':
+        $ctrl = controller('src/controllers/TechnicalPropertiesController.php', 'TechnicalPropertiesController');
+        $ctrl->renderTechnicalProperties($params[1]);
+        break;
     // Si no encuentra la ruta, redirige al 404
     default:
         include_once 'src/views/ErrorView.php';

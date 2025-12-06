@@ -1,0 +1,107 @@
+<?php include_once 'src/templates/header.phtml'; ?>
+
+<main class="min-h-screen bg-indigo-100 w-full grid items-start py-8">
+
+    <div class="container mx-auto px-4 flex justify-between items-center mb-6">
+        <a href="<?= BASE_URL ?>propiedades"
+            class="inline-block transform transition-transform duration-100 hover:scale-95 bg-red-700 text-white rounded-md px-4 py-2 shadow-sm">
+            Volver
+        </a>
+
+        <h1 class="text-3xl font-bold text-indigo-700 tracking-tight">
+            Datos técnicos de la propiedad
+        </h1>
+
+        <a href="<?= BASE_URL ?>editar-propiedad/<?= $technical->id_technical_properties ?>"
+            class="inline-block transform transition-transform duration-100 hover:scale-95 bg-indigo-700 text-white rounded-md px-4 py-2 shadow-sm">
+            Editar ficha técnica
+        </a>
+    </div>
+
+    <div class="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <div class="bg-white shadow rounded-lg p-6">
+            <h2 class="text-xl font-bold text-indigo-700 mb-4">Datos de la Propiedad</h2>
+
+            <table class="w-full text-gray-700">
+                <tr>
+                    <td class="font-semibold py-2">Ciudad:</td>
+                    <td><?= htmlspecialchars($property->city) ?></td>
+                </tr>
+                <tr>
+                    <td class="font-semibold py-2">Dirección:</td>
+                    <td><?= htmlspecialchars($property->address) ?></td>
+                </tr>
+                <tr>
+                    <td class="font-semibold py-2">Piso:</td>
+                    <td><?= htmlspecialchars($property->floor) ?></td>
+                </tr>
+                <tr>
+                    <td class="font-semibold py-2">Departamento:</td>
+                    <td><?= htmlspecialchars($property->apartment) ?></td>
+                </tr>
+                <tr>
+                    <td class="font-semibold py-2">Tipo:</td>
+                    <td><?= htmlspecialchars($property->type) ?></td>
+                </tr>
+                <tr>
+                    <td class="font-semibold py-2">Precio Base:</td>
+                    <td class="font-bold">$ <?= number_format($property->base_price, 0, ',', '.') ?></td>
+                </tr>
+                <tr>
+                    <td class="font-semibold py-2">Descripción:</td>
+                    <td><?= nl2br(htmlspecialchars($property->description)) ?></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="bg-white shadow rounded-lg p-6">
+            <h2 class="text-xl font-bold text-indigo-700 mb-4">Datos Técnicos</h2>
+
+            <table class="w-full text-gray-700">
+
+                <tr><td class="font-semibold py-2">Nomenclatura Catastral:</td>
+                    <td><?= htmlspecialchars($technical->cadastral_nomenclature) ?></td></tr>
+
+                <tr><td class="font-semibold py-2">N° Partida:</td>
+                    <td><?= htmlspecialchars($technical->departure_number) ?></td></tr>
+
+                <tr><td class="font-semibold py-2">Topografía:</td>
+                    <td><?= htmlspecialchars($technical->topography) ?></td></tr>
+
+                <tr><td class="font-semibold py-2">Parcela:</td>
+                    <td><?= htmlspecialchars($technical->parcel) ?></td></tr>
+
+                <tr><td class="font-semibold py-2">Metros Frente:</td>
+                    <td><?= htmlspecialchars($technical->meters_front) ?></td></tr>
+
+                <tr><td class="font-semibold py-2">Metros Fondo:</td>
+                    <td><?= htmlspecialchars($technical->meters_deep) ?></td></tr>
+
+                <tr><td class="font-semibold py-2">Acceso:</td>
+                    <td><?= htmlspecialchars($technical->access) ?></td></tr>
+
+                <tr><td class="font-semibold py-2">Servicios:</td>
+                    <td><?= htmlspecialchars($technical->services) ?></td></tr>
+
+                <tr><td class="font-semibold py-2">Ocupado:</td>
+                    <td><?= htmlspecialchars($technical->busy) ?></td></tr>
+
+                <tr><td class="font-semibold py-2">Superficie:</td>
+                    <td><?= htmlspecialchars($technical->surface) ?> m²</td></tr>
+
+                <tr><td class="font-semibold py-2">Servicios Comunes / Amenities:</td>
+                    <td><?= htmlspecialchars($technical->amenities) ?></td></tr>
+
+                <tr><td class="font-semibold py-2">Tipo de Ajuste:</td>
+                    <td><?= htmlspecialchars($technical->adjustment_type) ?></td></tr>
+
+                <tr><td class="font-semibold py-2">¿Es nuevo?</td>
+                    <td><?= $technical->is_new ? 'Sí' : 'No' ?></td></tr>
+            </table>
+        </div>
+
+    </div>
+</main>
+
+<?php include_once 'src/templates/footer.phtml'; ?>
