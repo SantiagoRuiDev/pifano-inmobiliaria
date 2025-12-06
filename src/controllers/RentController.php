@@ -169,6 +169,16 @@ class RentController
 
     private function renderHtmlForReceipt($rentData)
     {
+        $meses = [
+            1 => 'ENERO', 2 => 'FEBRERO', 3 => 'MARZO', 4 => 'ABRIL',
+            5 => 'MAYO', 6 => 'JUNIO', 7 => 'JULIO', 8 => 'AGOSTO',
+            9 => 'SEPTIEMBRE', 10 => 'OCTUBRE', 11 => 'NOVIEMBRE', 12 => 'DICIEMBRE'
+        ];
+        
+        $diaActual = date('d');
+        $mesActualStr = $meses[date('n')];
+        $anioActual = date('Y');
+        
         ob_start();
         include __DIR__ . '/../templates/receipt_template.phtml';
         $html = ob_get_clean();
