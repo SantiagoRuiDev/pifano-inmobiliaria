@@ -1,94 +1,94 @@
 <?php
-    // --- 1. FUNCIÓN DE CONVERSIÓN (Limpia y robusta) ---
+    // --- 0. CONFIGURACIÓN REGIONAL ---
+    date_default_timezone_set('America/Argentina/Buenos_Aires');
+
+    // --- 1. LÓGICA DE IMAGEN (SOLUCIÓN BASE64) ---
+    $base_path = dirname(__DIR__, 2); 
+    $logo_path = $base_path . '/public/images/pifanoloazul-removebg-preview.png';
+    
+    $logo_src = "";
+    if (file_exists($logo_path)) {
+        $type = pathinfo($logo_path, PATHINFO_EXTENSION);
+        $data = file_get_contents($logo_path);
+        $logo_src = 'data:image/' . $type . ';base64,' . base64_encode($data);
+    }
+
+    // --- 2. FUNCIÓN NUMERO A LETRAS ---
+    function numeroALetras($monto) {
+        $monto = str_replace(',', '', $monto); 
+        $monto = number_format($monto, 2, '.', ''); 
+        $partes = explode('.', $monto);
+        $entero = (int)$partes[0];
+
+        $convertir = function($n) {
+            $unidades = ['', 'UN', 'DOS', 'TRES', 'CUATRO', 'CINCO', 'SEIS', 'SIETE', 'OCHO', 'NUEVE', 'DIEZ', 'ONCE', 'DOCE', 'TRECE', 'CATORCE', 'QUINCE', 'DIECISEIS', 'DIECISIETE', 'DIECIOCHO', 'DIECINUEVE', 'VEINTE', 'VEINTIUN', 'VEINTIDOS', 'VEINTITRES', 'VEINTICUATRO', 'VEINTICINCO', 'VEINTISEIS', 'VEINTISIETE', 'VEINTIOCHO', 'VEINTINUEVE'];
+            $decenas = ['', 'DIEZ', 'VEINTE', 'TREINTA', 'CUARENTA', 'CINCUENTA', 'SESENTA', 'SETENTA', 'OCHENTA', 'NOVENTA'];
+            $centenas = ['', 'CIENTO', 'DOSCIENTOS', 'TRESCIENTOS', 'CUATROCIENTOS', 'QUINIENTOS', 'SEISCIENTOS', 'SETECIENTOS', 'OCHOCIENTOS', 'NOVECIENTOS'];
+            if ($n == 0) return '';
+            if ($n < 30) return $unidades[$n];
+            if ($n < 100) { $d = floor($n / 10); $u = $n % 10; return $decenas[$d] . ($u > 0 ? ' Y ' . $unidades[$u] : ''); }
+            if ($n < 1000) { $c = floor($n / 100); $r = $n % 100; if ($n == 100) return 'CIEN'; return $centenas[$c] . ($r > 0 ? ' ' . $this($r) : ''); }
+            return '';
+        };
+        
+        $texto = '';
+        if ($entero == 0) $texto = 'CERO';
+        else {
+            $millones = floor($entero / 1000000);
+            $miles = floor(($entero % 1000000) / 1000);
+            $cientos = $entero % 1000;
+            if ($millones > 0) { if ($millones == 1) $texto .= 'UN MILLON '; else $texto .= convertirGrupo($millones) . ' MILLONES '; }
+            if ($miles > 0) { if ($miles == 1) $texto .= 'MIL '; else $texto .= convertirGrupo($miles) . ' MIL '; }
+            if ($cientos > 0) { $texto .= convertirGrupo($cientos); }
+        }
+        return trim($texto);
+    }
+
     function convertirGrupo($n) {
         $unidades = ['', 'UN', 'DOS', 'TRES', 'CUATRO', 'CINCO', 'SEIS', 'SIETE', 'OCHO', 'NUEVE', 'DIEZ', 'ONCE', 'DOCE', 'TRECE', 'CATORCE', 'QUINCE', 'DIECISEIS', 'DIECISIETE', 'DIECIOCHO', 'DIECINUEVE', 'VEINTE', 'VEINTIUN', 'VEINTIDOS', 'VEINTITRES', 'VEINTICUATRO', 'VEINTICINCO', 'VEINTISEIS', 'VEINTISIETE', 'VEINTIOCHO', 'VEINTINUEVE'];
         $decenas = ['', 'DIEZ', 'VEINTE', 'TREINTA', 'CUARENTA', 'CINCUENTA', 'SESENTA', 'SETENTA', 'OCHENTA', 'NOVENTA'];
         $centenas = ['', 'CIENTO', 'DOSCIENTOS', 'TRESCIENTOS', 'CUATROCIENTOS', 'QUINIENTOS', 'SEISCIENTOS', 'SETECIENTOS', 'OCHOCIENTOS', 'NOVECIENTOS'];
-
         $salida = '';
-
         if ($n == 100) return 'CIEN';
-        
-        if ($n >= 100) {
-            $c = floor($n / 100);
-            $salida .= $centenas[$c] . ' ';
-            $n %= 100;
-        }
-
-        if ($n >= 30) {
-            $d = floor($n / 10);
-            $salida .= $decenas[$d];
-            $n %= 10;
-            if ($n > 0) $salida .= ' Y ';
-        } else if ($n > 0) {
-            $salida .= $unidades[$n];
-        }
-
+        if ($n >= 100) { $c = floor($n / 100); $salida .= $centenas[$c] . ' '; $n %= 100; }
+        if ($n >= 30) { $d = floor($n / 10); $salida .= $decenas[$d]; $n %= 10; if ($n > 0) $salida .= ' Y '; }
+        if ($n > 0) { $salida .= $unidades[$n]; }
         return trim($salida);
     }
 
-    function numeroALetras($monto) {
-        // Aseguramos que sea un número limpio
-        $monto = (float)str_replace(',', '', $monto); 
-        $entero = floor($monto);
-        
-        if ($entero == 0) return 'CERO';
-        if ($entero > 999999999) return 'ALTO VALOR';
-
-        $millones = floor($entero / 1000000);
-        $miles = floor(($entero % 1000000) / 1000);
-        $cientos = $entero % 1000;
-
-        $texto = '';
-
-        if ($millones > 0) {
-            if ($millones == 1) $texto .= 'UN MILLON ';
-            else $texto .= convertirGrupo($millones) . ' MILLONES ';
-        }
-
-        if ($miles > 0) {
-            if ($miles == 1) $texto .= 'MIL ';
-            else $texto .= convertirGrupo($miles) . ' MIL ';
-        }
-
-        if ($cientos > 0) {
-            $texto .= convertirGrupo($cientos);
-        }
-
-        return trim($texto);
-    }
-
-    // --- 2. OBTENCIÓN DE DATOS ---
+    // --- 3. OBTENCIÓN DE DATOS ---
     if (!isset($rentData) || !$rentData) { echo "<h1>Error: Datos no encontrados.</h1>"; return; }
     
-    // Fechas
-    $generation_date_str = $rentData->generation_date ?? date('Y-m-d');
-    setlocale(LC_TIME, 'es_ES.utf8', 'es_ES', 'es');
+    // Configuración de Meses
     $meses_es = [1 => 'ENERO', 2 => 'FEBRERO', 3 => 'MARZO', 4 => 'ABRIL', 5 => 'MAYO', 6 => 'JUNIO', 7 => 'JULIO', 8 => 'AGOSTO', 9 => 'SEPTIEMBRE', 10 => 'OCTUBRE', 11 => 'NOVIEMBRE', 12 => 'DICIEMBRE'];
-    
+
+    // --- FECHA DE EMISIÓN (HOY) ---
+    // Usamos la fecha actual del sistema para el encabezado
+    $fecha_emision = new DateTime(); // Toma "ahora"
+    $diaActual = $fecha_emision->format('d');
+    $mesActualStr = $meses_es[(int)$fecha_emision->format('n')]; 
+    $anioActual = $fecha_emision->format('Y');
+
+    // --- FECHA DEL PERÍODO (BASE DE DATOS) ---
+    // Usamos la fecha guardada en la DB para saber qué mes se está cobrando
+    $generation_date_str = $rentData->generation_date ?? date('Y-m-d');
     try {
-        $date_obj = new DateTime($generation_date_str);
-        $diaActual = $date_obj->format('d');
-        $mesActualStr = $meses_es[(int)$date_obj->format('n')]; 
-        $anioActual = $date_obj->format('Y');
-        
-        $mes_recibo = $mesActualStr;
-        $anio_recibo = $anioActual;
+        $fecha_periodo = new DateTime($generation_date_str);
+        $mes_recibo = $meses_es[(int)$fecha_periodo->format('n')];
+        $anio_recibo = $fecha_periodo->format('Y');
     } catch (Exception $e) {
-        $diaActual = '--'; $mesActualStr = 'Error'; $anioActual = '----';
+        $mes_recibo = 'ERROR';
+        $anio_recibo = '----';
     }
 
-    // Montos
     $monto_alquiler = (float) ($rentData->amount ?? 0);
     $honorarium_percent = (float) ($rentData->honorarium ?? 0);
     $descuento_otros = (float) ($rentData->discount ?? 0);
     $honorarium_discount = $monto_alquiler * ($honorarium_percent / 100);
     $total_a_pagar = $monto_alquiler - $honorarium_discount - $descuento_otros;
     
-    // **AQUÍ SE GENERA EL TEXTO DINÁMICO**
     $monto_en_letras = numeroALetras($monto_alquiler);
 
-    // Textos
     $tenant_full_name = htmlspecialchars($rentData->tenant_name ?? '') . ' ' . htmlspecialchars($rentData->tenant_lastname ?? '');
     $tenant_dni = htmlspecialchars($rentData->tenant_dni ?? '');
     $property_location = htmlspecialchars($rentData->property_address ?? '') . ', ' . htmlspecialchars($rentData->property_city ?? '');
@@ -100,12 +100,11 @@
 <head>
     <meta charset="UTF-8"> 
     <style>
-        /* Márgenes ajustados para A4 (2 recibos página 1, 1 en página 2) */
         @page { margin: 8mm 10mm; }
         body { font-family: 'Helvetica', sans-serif; margin: 0; padding: 0; color: #053e4e; }
 
         .receipt-wrapper {
-            height: 128mm; /* Altura ajustada */
+            height: 128mm; 
             width: 100%;
             position: relative;
             box-sizing: border-box;
@@ -123,9 +122,8 @@
         .header-table { width: 100%; margin-bottom: 10px; }
         .header-table td { vertical-align: top; }
         
-        .logo-ap { font-size: 32pt; font-weight: 900; margin: 0; line-height: 0.8; color: #053e4e; }
-        .logo-text { font-size: 18pt; font-weight: 900; margin: 5px 0 0 0; color: #053e4e; letter-spacing: -0.5px; }
-        .logo-subtext { font-size: 8pt; color: #053e4e; margin: 0; text-transform: uppercase; }
+        .logo-text { font-size: 18pt; font-weight: 900; margin: 0; color: #053e4e; letter-spacing: -0.5px; line-height: 1; }
+        .logo-subtext { font-size: 8pt; color: #053e4e; margin: 0; text-transform: uppercase; line-height: 1.2; }
         .info-header { font-size: 8pt; color: #555; margin-top: 5px; line-height: 1.2; }
 
         .date-table { 
@@ -150,28 +148,13 @@
         .row-table td { font-size: 10pt; vertical-align: bottom; color: #000; }
         
         .label { white-space: nowrap; padding-right: 5px; font-weight: normal; }
-        .fill { 
-            border-bottom: 1px dashed #000; 
-            font-weight: 900; /* Texto en negrita */
-            padding-left: 5px; 
-            width: 100%; 
-        }
-        .fill-fixed {
-            border-bottom: 1px dashed #000; 
-            font-weight: 900; 
-            padding-left: 5px; 
-            text-align: center;
-        }
+        .fill { border-bottom: 1px dashed #000; font-weight: bold; padding-left: 5px; width: 100%; }
+        .fill-fixed { border-bottom: 1px dashed #000; font-weight: bold; padding-left: 5px; text-align: center; }
 
         .amount-words { font-size: 8pt; font-weight: normal; margin-left: 10px; text-transform: uppercase; }
 
         /* DETALLE */
-        .detail-title { 
-            font-weight: 900; font-size: 10pt; color: #053e4e; 
-            border-bottom: 2px solid #053e4e; 
-            margin: 10px 0 5px 0; 
-            text-transform: uppercase; 
-        }
+        .detail-title { font-weight: 900; font-size: 10pt; color: #053e4e; border-bottom: 2px solid #053e4e; margin: 10px 0 5px 0; text-transform: uppercase; }
         
         /* FOOTER */
         .footer-table { width: 100%; margin-top: 20px; }
@@ -180,16 +163,7 @@
         .payment-method { font-weight: 900; font-size: 10pt; color: #000; margin-bottom: 5px; }
         .signature-line { border-top: 1px solid #000; width: 200px; text-align: center; font-size: 8pt; margin-top: 40px; }
         
-        .total-box {
-            border: 3px solid #053e4e;
-            padding: 5px 10px;
-            text-align: right;
-            font-size: 14pt;
-            font-weight: 900;
-            color: #000;
-            width: 220px;
-            margin-left: auto;
-        }
+        .total-box { border: 3px solid #053e4e; padding: 5px 10px; text-align: right; font-size: 14pt; font-weight: 900; color: #000; width: 220px; margin-left: auto; }
 
         .cut-line { border-bottom: 1px dashed #999; margin: 5mm 0; position: relative; }
         .cut-line::after { content: "✂"; position: absolute; right: 0; top: -10px; font-size: 14px; color: #999; }
@@ -206,30 +180,36 @@
             <table class="header-table">
                 <tr>
                     <td style="width: 60%;">
-                        <div class="logo-ap">AP</div>
-                        <div class="logo-text">AGUSTIN PIFANO</div>
-                        <div class="logo-subtext">MARTILLERO Y CORREDOR PÚBLICO</div>
-                        <div class="logo-subtext">MATRÍCULA 1840 TOMO VII FOLIO 131</div>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="width: 90px; vertical-align: top; padding-right: 10px;">
+                                    <?php if($logo_src): ?>
+                                        <img src="<?= $logo_src ?>" style="width: 80px; height: auto;" alt="Logo AP">
+                                    <?php else: ?>
+                                        <div style="font-size: 30pt; font-weight: bold; color: #053e4e;">AP</div>
+                                    <?php endif; ?>
+                                </td>
+                                <td style="vertical-align: top; padding-top: 5px;">
+                                    <div class="logo-text">AGUSTIN PIFANO</div>
+                                    <div class="logo-subtext">MARTILLERO Y CORREDOR PÚBLICO</div>
+                                    <div class="logo-subtext">MATRÍCULA 1840 TOMO VII FOLIO 131</div>
+                                </td>
+                            </tr>
+                        </table>
+                        
                         <div class="info-header">
                             Av. Roque Sáenz Peña 71° // Benito Juárez, Bs. As.<br>
                             2281-461194 // pifanoagustin19@gmail.com
                         </div>
                     </td>
+                    
                     <td style="width: 40%;">
                         <div class="copy-label"><?= $labels[$i] ?></div>
                         <div class="receipt-number">RECIBO N°....</div>
                         
                         <table class="date-table">
-                            <tr>
-                                <th width="25%">DÍA</th>
-                                <th width="50%">MES</th>
-                                <th width="25%">AÑO</th>
-                            </tr>
-                            <tr>
-                                <td><?= $diaActual ?></td>
-                                <td><?= $mesActualStr ?></td>
-                                <td><?= $anioActual ?></td>
-                            </tr>
+                            <tr><th width="25%">DÍA</th><th width="50%">MES</th><th width="25%">AÑO</th></tr>
+                            <tr><td><?= $diaActual ?></td><td><?= $mesActualStr ?></td><td><?= $anioActual ?></td></tr>
                         </table>
                         
                         <div class="cuit-info">
@@ -245,9 +225,9 @@
             <table class="row-table">
                 <tr>
                     <td class="label">Recibí de los Sr/es.</td>
-                    <td class="fill" style="width: 55%;"><?= $tenant_full_name ?></td>
+                    <td class="fill" style="width: 55%; font-weight: 900;"><?= $tenant_full_name ?></td>
                     <td class="label" style="padding-left: 10px;">, D.N.I.</td>
-                    <td class="fill-fixed" style="width: 25%;"><?= $tenant_dni ?></td>
+                    <td class="fill-fixed" style="width: 25%; font-weight: 900;"><?= $tenant_dni ?></td>
                 </tr>
             </table>
 
@@ -255,7 +235,7 @@
                 <tr>
                     <td class="label">la cantidad de pesos</td>
                     <td class="fill">
-                        <?= number_format($monto_alquiler, 2, ',', '.') ?>
+                        <span style="font-weight: 900;"><?= number_format($monto_alquiler, 2, ',', '.') ?></span>
                         <span class="amount-words">(<?= $monto_en_letras ?>)</span>
                     </td>
                     <td class="label" style="padding-left: 5px;">$</td>
@@ -265,7 +245,7 @@
             <table class="row-table">
                 <tr>
                     <td class="label">en concepto de pago de alquiler, por el/la</td>
-                    <td class="fill-fixed" style="width: 30%;">PROPIEDAD</td>
+                    <td class="fill-fixed" style="width: 30%; font-weight: 900;">PROPIEDAD</td>
                     <td class="label" style="padding-left: 10px;">ubicado/a en</td>
                     <td class="fill"></td>
                 </tr>
@@ -273,9 +253,9 @@
             
             <table class="row-table">
                 <tr>
-                    <td class="fill" style="width: 60%;"><?= $property_location ?></td>
+                    <td class="fill" style="width: 60%; font-weight: 900;"><?= $property_location ?></td>
                     <td class="label" style="padding-left: 10px;">, MES/PERÍODO</td>
-                    <td class="fill-fixed" style="width: 25%;"><?= $mes_recibo . '/' . $anio_recibo ?></td>
+                    <td class="fill-fixed" style="width: 25%; font-weight: 900;"><?= $mes_recibo . '/' . $anio_recibo ?></td>
                 </tr>
             </table>
 
