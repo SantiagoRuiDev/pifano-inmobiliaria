@@ -36,6 +36,21 @@ switch ($params[0]) {
         $ctrl = controller('src/controllers/RentController.php', 'RentController');
         $ctrl->deleteRent($params[1] ?? null);
         break;
+    
+    case 'control-alquiler':
+        $ctrl = controller('src/controllers/PaymentControlController.php', 'PaymentControlController');
+        $ctrl->renderManagmentPage($params[1] ?? null);
+        break;
+    
+    case 'informar-pago':
+        $ctrl = controller('src/controllers/PaymentControlController.php', 'PaymentControlController');
+        $ctrl->handleCreatePayment($params[1] ?? null);
+        break;
+
+    case 'eliminar-pago':
+        $ctrl = controller('src/controllers/PaymentControlController.php', 'PaymentControlController');
+        $ctrl->deletePayment($params[1] ?? null, $params[2] ?? null);
+        break;
 
     case 'propiedades':
         $ctrl = controller('src/controllers/PropertyController.php', 'PropertyController');

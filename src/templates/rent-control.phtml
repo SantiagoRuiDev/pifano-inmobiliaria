@@ -1,0 +1,65 @@
+<?php include_once 'src/templates/header.phtml'; ?>
+
+<main class="min-h-screen bg-indigo-100 w-full grid items-start gap-4 py-4">
+
+    <div class="container mx-auto flex justify-between items-center px-4">
+        <a href="<?= BASE_URL ?>alquileres"
+            class="inline-block transform transition-transform duration-100 hover:scale-95 bg-red-700 text-white border border-transparent rounded-md px-4 py-2 no-underline hover:bg-red-700 shadow-sm font-medium">
+            Regresar a los alquileres
+        </a>
+
+        <h1 class="text-3xl font-bold text-indigo-700 tracking-tight">
+            Control de Pagos
+        </h1>
+        <a href="<?= BASE_URL ?>informar-pago/<?= $id_rent ?>"
+            class="inline-block transform transition-transform duration-100 hover:scale-95 bg-green-700 text-white border border-transparent rounded-md px-4 py-2 no-underline hover:bg-green-700 shadow-sm font-medium">
+            Informar pago
+        </a>
+    </div>
+
+    <?php if (!empty($payments)): ?>
+        <div class="container px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <?php foreach ($payments as $p): ?>
+                    <div class="bg-indigo-200 rounded-md p-4 flex flex-col gap-4">
+                        <div class="inline-flex items-center justify-between gap-2">
+                            <div class="bg-indigo-600 rounded-md p-2 w-max">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                    <path fill="#fff" d="M3 22V2l1.5 1.5L6 2l1.5 1.5L9 2l1.5 1.5L12 2l1.5 1.5L15 2l1.5 1.5L18 2l1.5 1.5L21 2v20l-1.5-1.5L18 22l-1.5-1.5L15 22l-1.5-1.5L12 22l-1.5-1.5L9 22l-1.5-1.5L6 22l-1.5-1.5zm3-5h12v-2H6zm0-4h12v-2H6zm0-4h12V7H6z" />
+                                </svg>
+                            </div>
+                            <a
+                                onclick="return confirm('¿Seguro que deseas eliminar este alquiler?');"
+                                href="?action=eliminar-pago/<?= $p->id_payment ?>/<?= $p->id_rent ?>"
+                                class="bg-red-800 rounded-md p-2 w-max">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                    <path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" d="M14 11v6m-4-6v6M6 7v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7M4 7h16M7 7l2-4h6l2 4" stroke-width="1" />
+                                </svg>
+                            </a>
+                        </div>
+                        <div class="grid gap-3">
+                            <div class="flex flex-col">
+                                <h1 class="text-zinc-900 text-lg font-bold">Fecha de pago</h1>
+                                <h3 class="text-orange-800 w-max text-base bg-orange-200 rounded-xl px-2 py-1"><?= date("d/m/Y", strtotime($p->issued_date)) ?></h3>
+                            </div>
+                            <div class="flex flex-col">
+                                <h1 class="text-zinc-900 text-lg font-bold">Total Recibido</h1>
+                                <h3 class="text-green-800 w-max text-base bg-green-200 rounded-xl px-2 py-1">$<?= number_format($p->amount, 0, ',', '.') ?></h3>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    <?php endif; ?>
+
+
+    <?php if (empty($payments)): ?>
+        <div class="bg-indigo-200 rounded-md p-4 flex flex-col gap-4 mx-auto">
+            <h2 class="text-xl font-bold text-indigo-600">No hay pagos informados para este alquiler.</h2>
+        </div>
+    <?php endif; ?>
+</main>
+
+
+<?php include_once 'src/templates/footer.phtml'; ?>

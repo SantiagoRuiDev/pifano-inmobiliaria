@@ -84,3 +84,18 @@ CREATE TABLE Rent (
     CONSTRAINT Rent_Property FOREIGN KEY (id_property)
         REFERENCES Property (id_property)
 );
+
+
+-- ============================
+-- TABLE: Rent Payment
+-- ============================
+CREATE TABLE Rent_payment (
+    id_payment INT NOT NULL AUTO_INCREMENT,
+    id_rent INT NOT NULL,
+    amount INT NOT NULL,
+    issued_date DATE NOT NULL,
+    CONSTRAINT Rent_payment_pk PRIMARY KEY (id_payment),
+    
+    CONSTRAINT Rent_contract FOREIGN KEY (id_rent)
+        REFERENCES Rent (id_rent)
+);
