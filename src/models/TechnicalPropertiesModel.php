@@ -17,6 +17,48 @@ class TechnicalPropertiesModel {
         
     }
 
+    public function updateTechnicalProperty($id, $data) {
+        try {
+            $query = $this->PDO->prepare("
+                UPDATE technical_properties SET
+                    cadastral_nomenclature = ?,
+                    departure_number = ?,
+                    topography = ?,
+                    parcel = ?,
+                    meters_front = ?,
+                    meters_deep = ?,
+                    access = ?,
+                    services = ?,
+                    busy = ?,
+                    surface = ?,
+                    amenities = ?,
+                    adjustment_type = ?,
+                    is_new = ?
+                WHERE id_technical_properties = ?
+            ");
+
+            $query->execute([
+                $data['cadastral_nomenclature'],
+                $data['departure_number'],
+                $data['topography'],
+                $data['parcel'],
+                $data['meters_front'],
+                $data['meters_deep'],
+                $data['access'],
+                $data['services'],
+                $data['busy'],
+                $data['surface'],
+                $data['amenities'],
+                $data['adjustment_type'],
+                $data['is_new'],
+                $id
+            ]);
+            return true;
+        } catch (PDOException $e) {
+            echo "Error en la actualización: " . $e->getMessage();
+            return false;
+        }
+    }
    public function getTechnicalPropertyById($id_technical_properties){
     $query = $this->PDO->prepare('
         SELECT 

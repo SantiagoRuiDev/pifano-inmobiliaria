@@ -1,6 +1,7 @@
 <?php
 // Función para cargar e instanciar un controlador
-function controller($path, $className) {
+function controller($path, $className)
+{
     include_once $path;
     return new $className();
 }
@@ -30,7 +31,7 @@ switch ($params[0]) {
         $ctrl = controller('src/controllers/RentController.php', 'RentController');
         $ctrl->updateRent();
         break;
-        
+
     case 'eliminar-alquiler':
         $ctrl = controller('src/controllers/RentController.php', 'RentController');
         $ctrl->deleteRent($params[1] ?? null);
@@ -61,6 +62,17 @@ switch ($params[0]) {
         $ctrl->deleteProperty($params[1] ?? null);
         break;
 
+    // ... otros casos ...
+
+    case 'editar-datos-tecnicos':
+        $ctrl = controller('src/controllers/TechnicalPropertiesController.php', 'TechnicalPropertiesController');
+        $ctrl->renderEditForm($params[1]); 
+        break;
+
+    case 'actualizar-datos-tecnicos':
+        $ctrl = controller('src/controllers/TechnicalPropertiesController.php', 'TechnicalPropertiesController');
+        $ctrl->handleUpdate();
+        break;
     case 'clients':
         $ctrl = controller('src/controllers/ClientControllers.php', 'ClientControllers');
         $ctrl->renderClientPage();
@@ -90,14 +102,14 @@ switch ($params[0]) {
         $ctrl = controller('src/controllers/ClientControllers.php', 'ClientControllers');
         $ctrl->deleteClient($params[1] ?? null);
         break;
-        
+
     case 'generar-recibo':
         $ctrl = controller('src/controllers/RentController.php', 'RentController');
         $ctrl->renderSelectRentPage();
         break;
-    case 'procesar-recibo': 
+    case 'procesar-recibo':
         $ctrl = controller('src/controllers/RentController.php', 'RentController');
-        $ctrl->generateReceiptPdf(); 
+        $ctrl->generateReceiptPdf();
         break;
     case 'datos-tecnicos':
         $ctrl = controller('src/controllers/TechnicalPropertiesController.php', 'TechnicalPropertiesController');

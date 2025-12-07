@@ -12,7 +12,7 @@
             Datos técnicos de la propiedad
         </h1>
 
-        <a href="<?= BASE_URL ?>editar-propiedad/<?= $technical->id_technical_properties ?>"
+        <a href="<?= BASE_URL ?>editar-datos-tecnicos/<?= $technical->id_technical_properties ?>"
             class="inline-block transform transition-transform duration-100 hover:scale-95 bg-indigo-700 text-white rounded-md px-4 py-2 shadow-sm">
             Editar ficha técnica
         </a>
@@ -60,44 +60,70 @@
 
             <table class="w-full text-gray-700">
 
-                <tr><td class="font-semibold py-2">Nomenclatura Catastral:</td>
-                    <td><?= htmlspecialchars($technical->cadastral_nomenclature) ?></td></tr>
+                <tr>
+                    <td class="font-semibold py-2">Nomenclatura Catastral:</td>
+                    <td><?= htmlspecialchars($technical->cadastral_nomenclature) ?></td>
+                </tr>
 
-                <tr><td class="font-semibold py-2">N° Partida:</td>
-                    <td><?= htmlspecialchars($technical->departure_number) ?></td></tr>
+                <tr>
+                    <td class="font-semibold py-2">N° Partida:</td>
+                    <td><?= htmlspecialchars($technical->departure_number) ?></td>
+                </tr>
 
-                <tr><td class="font-semibold py-2">Topografía:</td>
-                    <td><?= htmlspecialchars($technical->topography) ?></td></tr>
+                <tr>
+                    <td class="font-semibold py-2">Topografía:</td>
+                    <td><?= htmlspecialchars($technical->topography) ?></td>
+                </tr>
 
-                <tr><td class="font-semibold py-2">Parcela:</td>
-                    <td><?= htmlspecialchars($technical->parcel) ?></td></tr>
+                <tr>
+                    <td class="font-semibold py-2">Parcela:</td>
+                    <td><?= htmlspecialchars($technical->parcel) ?></td>
+                </tr>
 
-                <tr><td class="font-semibold py-2">Metros Frente:</td>
-                    <td><?= htmlspecialchars($technical->meters_front) ?></td></tr>
+                <tr>
+                    <td class="font-semibold py-2">Metros Frente:</td>
+                    <td><?= htmlspecialchars($technical->meters_front) ?></td>
+                </tr>
 
-                <tr><td class="font-semibold py-2">Metros Fondo:</td>
-                    <td><?= htmlspecialchars($technical->meters_deep) ?></td></tr>
+                <tr>
+                    <td class="font-semibold py-2">Metros Fondo:</td>
+                    <td><?= htmlspecialchars($technical->meters_deep) ?></td>
+                </tr>
 
-                <tr><td class="font-semibold py-2">Acceso:</td>
-                    <td><?= htmlspecialchars($technical->access) ?></td></tr>
+                <tr>
+                    <td class="font-semibold py-2">Acceso:</td>
+                    <td><?= htmlspecialchars($technical->access) ?></td>
+                </tr>
 
-                <tr><td class="font-semibold py-2">Servicios:</td>
-                    <td><?= htmlspecialchars($technical->services) ?></td></tr>
+                <tr>
+                    <td class="font-semibold py-2">Servicios:</td>
+                    <td><?= htmlspecialchars($technical->services) ?></td>
+                </tr>
 
-                <tr><td class="font-semibold py-2">Ocupado:</td>
-                    <td><?= htmlspecialchars($technical->busy) ?></td></tr>
+                <tr>
+                    <td class="font-semibold py-2">Ocupado:</td>
+                    <td><?= htmlspecialchars($technical->busy) ?></td>
+                </tr>
 
-                <tr><td class="font-semibold py-2">Superficie:</td>
-                    <td><?= htmlspecialchars($technical->surface) ?> m²</td></tr>
+                <tr>
+                    <td class="font-semibold py-2">Superficie:</td>
+                    <td><?= htmlspecialchars($technical->surface) ?> m²</td>
+                </tr>
 
-                <tr><td class="font-semibold py-2">Servicios Comunes / Amenities:</td>
-                    <td><?= htmlspecialchars($technical->amenities) ?></td></tr>
+                <tr>
+                    <td class="font-semibold py-2">Servicios Comunes / Amenities:</td>
+                    <td><?= htmlspecialchars($technical->amenities) ?></td>
+                </tr>
 
-                <tr><td class="font-semibold py-2">Tipo de Ajuste:</td>
-                    <td><?= htmlspecialchars($technical->adjustment_type) ?></td></tr>
+                <tr>
+                    <td class="font-semibold py-2">Tipo de Ajuste:</td>
+                    <td><?= htmlspecialchars($technical->adjustment_type) ?></td>
+                </tr>
 
-                <tr><td class="font-semibold py-2">¿Es nuevo?</td>
-                    <td><?= $technical->is_new ? 'Sí' : 'No' ?></td></tr>
+                <tr>
+                    <td class="font-semibold py-2">¿Es nuevo?</td>
+                    <td><?= $technical->is_new ? 'Sí' : 'No' ?></td>
+                </tr>
             </table>
         </div>
 
